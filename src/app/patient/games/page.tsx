@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { DifficultyBadge } from '@/components/DifficultyBadge'
 import { ArrowLeft } from 'lucide-react'
+import { BlurText } from '@/components/ui/animations/BlurText'
 
 export default function GamesList() {
   const router = useRouter()
@@ -37,7 +38,9 @@ export default function GamesList() {
         <button onClick={() => router.push('/patient/home')} className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100">
           <ArrowLeft size={28} className="text-gray-700" />
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">Your Games</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          <BlurText text="Your Games" />
+        </h1>
       </div>
 
       <div className="flex flex-col gap-5">

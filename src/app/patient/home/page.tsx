@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { LogOut, Gamepad2, BookHeart, Bell, Phone } from 'lucide-react';
 import { SkeletonCard, SkeletonText } from '@/components/ui/Skeleton';
 import { PatientBottomNav } from '@/components/PatientBottomNav';
+import { SplitText } from '@/components/ui/animations/SplitText';
 
 export default function PatientHome() {
   const router = useRouter();
@@ -15,6 +16,9 @@ export default function PatientHome() {
   const [gamesToday, setGamesToday] = useState<number>(0);
   const [nextReminder, setNextReminder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +93,9 @@ export default function PatientHome() {
     <div className="min-h-screen bg-gray-50 p-6 flex flex-col gap-6 pb-24 max-w-lg mx-auto">
       <div className="flex justify-between items-center mt-2">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Hello, {profile?.full_name || 'Friend'}! 🌅</h1>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <SplitText text={`Hello, ${profile?.full_name?.split(' ')[0] || 'Friend'}!`} /> 🌅
+          </h1>
           <p className="text-lg text-gray-600 mt-1">{todayStr}</p>
         </div>
         <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors p-2" aria-label="Logout">

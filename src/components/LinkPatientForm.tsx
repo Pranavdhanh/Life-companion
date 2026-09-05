@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, UserPlus } from 'lucide-react'
+import { ShinyText } from '@/components/ui/animations/ShinyText'
 
 export function LinkPatientForm({ onLinked }: { onLinked: () => void }) {
   const [email, setEmail] = useState('')
@@ -32,7 +33,9 @@ export function LinkPatientForm({ onLinked }: { onLinked: () => void }) {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 max-w-md mx-auto">
       <div className="flex items-center gap-2 mb-4">
         <UserPlus className="text-blue-600" />
-        <h3 className="text-xl font-bold text-gray-800">Link a Patient</h3>
+        <h3 className="text-xl font-bold text-gray-800">
+          <ShinyText text="Link a Patient" />
+        </h3>
       </div>
       <p className="text-sm text-gray-600 mb-4">
         Enter the email address the patient used to register their account to link them to your Caregiver dashboard.
