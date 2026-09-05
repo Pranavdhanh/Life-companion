@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { FamilyMemoryGame } from '@/components/games/FamilyMemoryGame'
 import { FestivalQuizGame } from '@/components/games/FestivalQuizGame'
+import { StoryRecallGame } from '@/components/games/StoryRecallGame'
 
 export default function GameSession() {
   const router = useRouter()
@@ -64,13 +65,16 @@ export default function GameSession() {
     return <div>Error loading patient profile.</div>
   }
 
-  // Route to specific game engine
   if (gameId === 'WHO_PHOTO') {
     return <FamilyMemoryGame patientId={patientData.id} difficulty={patientData.difficulty_level} lifeEvents={lifeEvents} />
   }
   
   if (gameId === 'WHICH_FESTIVAL') {
     return <FestivalQuizGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
+  }
+  
+  if (gameId === 'VOICE_RECALL') {
+    return <StoryRecallGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
   }
 
   // Placeholder for other games
