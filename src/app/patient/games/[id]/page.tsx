@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { FamilyMemoryGame } from '@/components/games/FamilyMemoryGame'
+import { FestivalQuizGame } from '@/components/games/FestivalQuizGame'
 
 export default function GameSession({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -63,6 +64,10 @@ export default function GameSession({ params }: { params: { id: string } }) {
   // Route to specific game engine
   if (params.id === 'WHO_PHOTO') {
     return <FamilyMemoryGame patientId={patientData.id} difficulty={patientData.difficulty_level} lifeEvents={lifeEvents} />
+  }
+  
+  if (params.id === 'WHICH_FESTIVAL') {
+    return <FestivalQuizGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
   }
 
   // Placeholder for other games
