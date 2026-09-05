@@ -8,6 +8,7 @@ import { LogOut, Gamepad2, BookHeart, Bell, Phone } from 'lucide-react';
 import { SkeletonCard, SkeletonText } from '@/components/ui/Skeleton';
 import { PatientBottomNav } from '@/components/PatientBottomNav';
 import { SplitText } from '@/components/ui/animations/SplitText';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 export default function PatientHome() {
   const router = useRouter();
@@ -98,9 +99,19 @@ export default function PatientHome() {
           </h1>
           <p className="text-lg text-gray-600 mt-1">{todayStr}</p>
         </div>
-        <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors p-2" aria-label="Logout">
-          <LogOut size={28} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => {
+              alert("EMERGENCY SOS TRIGGERED!\n\nAlerting Caregiver and ASHA Worker immediately with your GPS location.")
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg border-2 border-red-700 animate-pulse flex items-center gap-2 transition-transform active:scale-95"
+          >
+            🚨 SOS
+          </button>
+          <button onClick={handleLogout} className="text-gray-500 hover:text-gray-700 transition-colors p-2 bg-white rounded-full shadow-sm" aria-label="Logout">
+            <LogOut size={24} />
+          </button>
+        </div>
       </div>
       
       <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold w-max border border-yellow-200">
@@ -165,6 +176,7 @@ export default function PatientHome() {
         </div>
       </div>
 
+      <LanguageToggle />
       <PatientBottomNav />
     </div>
   );

@@ -136,6 +136,18 @@ export default function CaregiverDashboard() {
       <div className="p-6 max-w-5xl mx-auto w-full flex-1">
         {activeTab === 'overview' && (
           <div className="space-y-6">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-bold text-gray-800">Overview</h2>
+              <button 
+                onClick={() => {
+                  toast("Compiling P-Score metrics and cognitive weather map into PDF...", "info")
+                  setTimeout(() => window.print(), 1000)
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm flex items-center gap-2"
+              >
+                📄 Export Doctor's Report
+              </button>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Card className="p-4 bg-white border border-gray-100 shadow-sm text-center">
                 <p className="text-sm text-gray-500">Games this week</p>
