@@ -38,31 +38,85 @@ export default function AdminDashboard() {
   }, [supabase, activeTab]);
 
   const fetchStats = async () => {
-    const [{ count: pCount }, { count: cCount }, { count: aCount }, { count: sCount }] = await Promise.all([
-      supabase.from('patients').select('*', { count: 'exact', head: true }),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'CAREGIVER'),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'ASHA'),
-      supabase.from('game_sessions').select('*', { count: 'exact', head: true })
-    ]);
+    try {
+      const [
+        { count: pCount, error: pError }, 
+        { count: cCount, error: cError }, 
+        { count: aCount, error: aError }, 
+        { count: sCount, error: sError }
+      ] = await Promise.all([
+        supabase.from('patients').select('*', { count: 'exact', head: true }),
+        supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'CAREGIVER'),
+        supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'ASHA'),
+        supabase.from('game_sessions').select('*', { count: 'exact', head: true })
+      ]);
 
-    setStats({
-      patients: pCount || 0,
-      caregivers: cCount || 0,
-      ashas: aCount || 0,
-      sessions: sCount || 0
-    });
+      if (pError || cError || aError || sError) {
+        console.error("Stats Error:", { pError, cError, aError, sError });
+        toast("Failed to load some statistics. Check console.", "error");
+      }
+
+      setStats({
+        patients: pCount || 0,
+        caregivers: cCount || 0,
+        ashas: aCount || 0,
+        sessions: sCount || 0
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const fetchAshasList = async () => {
-    const { data } = await supabase.from('profiles').select('id, full_name').eq('role', 'ASHA');
+    const { data, error } = await supabase.from('profiles').select('id, full_name').eq('role', 'ASHA');
+    if (error) {
+      console.error("ASHA List Error:", error);
+    }
     if (data) setAshasList(data);
   };
 
   const fetchUsers = async (role: string) => {
     setLoading(true);
-    let query = supabase.from('profiles').select('*, patients(asha_id)').eq('role', role).order('created_at', { ascending: false });
-    const { data } = await query;
-    if (data) setUsers(data);
+    
+    // Fetch profiles first
+    const { data: profilesData, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('role', role)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error(`Fetch Users Error (${role}):`, error);
+      toast(`Failed to load ${role}s: ${error.message}`, "error");
+      setLoading(false);
+      return;
+    }
+    
+    if (profilesData && role === 'PATIENT') {
+      // Fetch corresponding patient records to get the assigned ASHA
+      const profileIds = profilesData.map((p: any) => p.id);
+      const { data: patientsData, error: patientsError } = await supabase
+        .from('patients')
+        .select('profile_id, asha_id')
+        .in('profile_id', profileIds);
+        
+      if (patientsError) {
+        console.error("Fetch Patients Error:", patientsError);
+      }
+      
+      // Merge the data
+      const mergedUsers = profilesData.map((p: any) => {
+        const patientRecord = patientsData?.find((pat: any) => pat.profile_id === p.id);
+        return {
+          ...p,
+          patients: patientRecord ? [patientRecord] : []
+        };
+      });
+      setUsers(mergedUsers);
+    } else if (profilesData) {
+      setUsers(profilesData);
+    }
+    
     setLoading(false);
   };
 
