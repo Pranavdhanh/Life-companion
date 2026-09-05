@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { FamilyMemoryGame } from '@/components/games/FamilyMemoryGame'
 import { FestivalQuizGame } from '@/components/games/FestivalQuizGame'
 
-export default function GameSession({ params }: { params: { id: string } }) {
+export default function GameSession() {
   const router = useRouter()
+  const params = useParams()
+  const gameId = params.id as string
+  
   const supabase = createClient()
   const [patientData, setPatientData] = useState<any>(null)
   const [lifeEvents, setLifeEvents] = useState<any[]>([])
@@ -62,11 +65,11 @@ export default function GameSession({ params }: { params: { id: string } }) {
   }
 
   // Route to specific game engine
-  if (params.id === 'WHO_PHOTO') {
+  if (gameId === 'WHO_PHOTO') {
     return <FamilyMemoryGame patientId={patientData.id} difficulty={patientData.difficulty_level} lifeEvents={lifeEvents} />
   }
   
-  if (params.id === 'WHICH_FESTIVAL') {
+  if (gameId === 'WHICH_FESTIVAL') {
     return <FestivalQuizGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
   }
 
@@ -74,7 +77,7 @@ export default function GameSession({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
       <h1 className="text-3xl font-bold mb-4">Game Under Construction</h1>
-      <p className="text-xl text-gray-600 mb-8">We are still porting {params.id} to the production environment.</p>
+      <p className="text-xl text-gray-600 mb-8">We are still porting {gameId} to the production environment.</p>
       <button 
         onClick={() => router.push('/patient/games')}
         className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold text-xl"
