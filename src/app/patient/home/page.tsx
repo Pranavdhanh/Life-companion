@@ -10,17 +10,18 @@ import { PatientBottomNav } from '@/components/PatientBottomNav';
 import { SplitText } from '@/components/ui/animations/SplitText';
 import { LanguageToggle } from '@/components/LanguageToggle';
 
+import { useLanguage } from '@/lib/i18n';
+
 export default function PatientHome() {
   const router = useRouter();
   const supabase = createClient();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<any>(null);
   const [gamesToday, setGamesToday] = useState<number>(0);
   const [nextReminder, setNextReminder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
-
+  // ... (fetchData block unchanged in behavior, keeping useEffect same)
   useEffect(() => {
     const fetchData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -37,7 +38,6 @@ export default function PatientHome() {
       setProfile(prof);
 
       if (patients) {
-        // Get today's games count
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
         
@@ -49,8 +49,6 @@ export default function PatientHome() {
           
         setGamesToday(count || 0);
 
-        // Get next upcoming reminder today
-        // (Simplification: assuming time_of_day maps well to current hour, or just getting the first active one)
         const { data: reminders } = await supabase
           .from('reminders')
           .select('*')
@@ -91,11 +89,11 @@ export default function PatientHome() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 flex flex-col gap-6 pb-24 max-w-lg mx-auto">
+    <div className="min-h-screen bg-gray-50 p-6 flex flex-col gap-6 pb-24 max-w-lg mx-auto transition-all duration-300">
       <div className="flex justify-between items-center mt-2">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-            <SplitText text={`Hello, ${profile?.full_name?.split(' ')[0] || 'Friend'}!`} /> 🌅
+            <SplitText text={`${t.hello}, ${profile?.full_name?.split(' ')[0] || t.friend}!`} key={t.hello} /> 🌅
           </h1>
           <p className="text-lg text-gray-600 mt-1">{todayStr}</p>
         </div>
@@ -106,20 +104,20 @@ export default function PatientHome() {
             }}
             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg border-2 border-red-700 animate-pulse flex items-center gap-2 transition-transform active:scale-95"
           >
-            🚨 SOS
+            🚨 {t.sos}
           </button>
-          <button onClick={handleLogout} className="text-gray-500 hover:text-gray-700 transition-colors p-2 bg-white rounded-full shadow-sm" aria-label="Logout">
+          <button onClick={handleLogout} className="text-gray-500 hover:text-gray-700 transition-colors p-2 bg-white rounded-full shadow-sm" aria-label={t.logout}>
             <LogOut size={24} />
           </button>
         </div>
       </div>
       
-      <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold w-max border border-yellow-200">
-        Support tool, not a medical device
+      <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold w-max border border-yellow-200 transition-all duration-300">
+        {t.supportTool}
       </div>
 
       <div className="text-xl text-gray-700 mt-2 font-medium">
-        You completed <span className="font-bold text-blue-600">{gamesToday}</span> games today
+        {t.gamesCompleted} <span className="font-bold text-blue-600">{gamesToday}</span> {t.gamesToday}
       </div>
       
       <div className="grid grid-cols-2 gap-4 mt-2">
@@ -131,8 +129,8 @@ export default function PatientHome() {
         >
           <Gamepad2 size={48} className="text-blue-600" />
           <div>
-            <h2 className="text-xl font-bold text-blue-900">Games</h2>
-            <p className="text-sm text-blue-800">{gamesToday} sessions today</p>
+            <h2 className="text-xl font-bold text-blue-900">{t.games}</h2>
+            <p className="text-sm text-blue-800">{gamesToday} {t.sessionsToday}</p>
           </div>
         </div>
 
@@ -144,8 +142,8 @@ export default function PatientHome() {
         >
           <BookHeart size={48} className="text-pink-600" />
           <div>
-            <h2 className="text-xl font-bold text-pink-900">Life Story</h2>
-            <p className="text-sm text-pink-800">View memories</p>
+            <h2 className="text-xl font-bold text-pink-900">{t.lifeStory}</h2>
+            <p className="text-sm text-pink-800">{t.viewMemories}</p>
           </div>
         </div>
 
@@ -157,8 +155,8 @@ export default function PatientHome() {
         >
           <Bell size={48} className="text-green-600" />
           <div>
-            <h2 className="text-xl font-bold text-green-900">Reminders</h2>
-            <p className="text-sm text-green-800">{nextReminder ? nextReminder.title : 'All done!'}</p>
+            <h2 className="text-xl font-bold text-green-900">{t.reminders}</h2>
+            <p className="text-sm text-green-800">{nextReminder ? nextReminder.title : t.allDone}</p>
           </div>
         </div>
 
@@ -170,8 +168,8 @@ export default function PatientHome() {
         >
           <Phone size={48} className="text-purple-600" />
           <div>
-            <h2 className="text-xl font-bold text-purple-900">Family</h2>
-            <p className="text-sm text-purple-800">Contact family</p>
+            <h2 className="text-xl font-bold text-purple-900">{t.family}</h2>
+            <p className="text-sm text-purple-800">{t.contactFamily}</p>
           </div>
         </div>
       </div>

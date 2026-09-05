@@ -3,15 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n';
 
 export function PatientBottomNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const links = [
-    { href: '/patient/home', label: 'Home', icon: '🏠' },
-    { href: '/patient/games', label: 'Games', icon: '🎮' },
-    { href: '/patient/timeline', label: 'Life Story', icon: '📖' },
-    { href: '/patient/reminders', label: 'Reminders', icon: '🔔' }
+    { href: '/patient/home', label: t.navHome, icon: '🏠' },
+    { href: '/patient/games', label: t.navGames, icon: '🎮' },
+    { href: '/patient/timeline', label: t.navLifeStory, icon: '📖' },
+    { href: '/patient/reminders', label: t.navReminders, icon: '🔔' }
   ];
 
   return (

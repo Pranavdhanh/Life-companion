@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
 import { OfflineBanner } from "@/components/OfflineBanner";
+import { LanguageProvider } from "@/lib/i18n";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,15 +27,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-gray-50">
-        <ToastProvider>
-          <OfflineBanner />
-          <main className="flex-grow">{children}</main>
-          <footer className="w-full bg-gray-800 text-gray-300 text-center py-4 px-6 text-sm">
-            <p className="max-w-4xl mx-auto">
-              <strong>Disclaimer:</strong> Life Companion is a support and monitoring tool, not a diagnostic or medical treatment device. Always consult with a healthcare professional for medical advice.
-            </p>
-          </footer>
-        </ToastProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <OfflineBanner />
+            <main className="flex-grow">{children}</main>
+            <footer className="w-full bg-gray-800 text-gray-300 text-center py-4 px-6 text-sm">
+              <p className="max-w-4xl mx-auto">
+                <strong>Disclaimer:</strong> Life Companion is a support and monitoring tool, not a diagnostic or medical treatment device. Always consult with a healthcare professional for medical advice.
+              </p>
+            </footer>
+          </ToastProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

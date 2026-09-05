@@ -1,21 +1,21 @@
 'use client'
 
-import { useState } from 'react'
 import { Languages } from 'lucide-react'
 import { useToast } from './ui/Toast'
+import { useLanguage } from '@/lib/i18n'
 
 export function LanguageToggle() {
-  const [lang, setLang] = useState('English')
+  const { language, setLanguage } = useLanguage()
   const { toast } = useToast()
   
-  const languages = ['English', 'Assamese (অসমীয়া)', 'Bengali (বাংলা)', 'Hindi (हिंदी)', 'Mizo']
+  const languages: Array<'English' | 'Assamese' | 'Bengali' | 'Hindi'> = ['English', 'Assamese', 'Bengali', 'Hindi']
 
   const toggleLang = () => {
-    const currentIndex = languages.indexOf(lang)
+    const currentIndex = languages.indexOf(language)
     const nextLang = languages[(currentIndex + 1) % languages.length]
-    setLang(nextLang)
+    setLanguage(nextLang)
     
-    toast(`Language switched to ${nextLang} (Simulated for SIH)`, 'info')
+    toast(`Language switched to ${nextLang}`, 'info')
   }
 
   return (
@@ -26,7 +26,7 @@ export function LanguageToggle() {
     >
       <Languages size={24} />
       <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap group-hover:ml-2 font-bold text-sm">
-        {lang}
+        {language}
       </span>
     </button>
   )
