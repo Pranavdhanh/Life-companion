@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import { FamilyMemoryGame } from '@/components/games/FamilyMemoryGame'
 import { FestivalQuizGame } from '@/components/games/FestivalQuizGame'
 import { StoryRecallGame } from '@/components/games/StoryRecallGame'
+import { MarketRecallGame } from '@/components/games/MarketRecallGame'
 
 export default function GameSession() {
   const router = useRouter()
@@ -75,6 +76,10 @@ export default function GameSession() {
   
   if (gameId === 'VOICE_RECALL') {
     return <StoryRecallGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
+  }
+  
+  if (gameId === 'MARKET_RECALL') {
+    return <MarketRecallGame patientId={patientData.id} difficulty={patientData.difficulty_level} />
   }
 
   // Placeholder for other games
